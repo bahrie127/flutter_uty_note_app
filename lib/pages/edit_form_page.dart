@@ -19,14 +19,23 @@ class EditFormPage extends StatefulWidget {
 class _EditFormPageState extends State<EditFormPage> {
   final _formKey = GlobalKey<FormState>();
 
-  TextEditingController titleController = TextEditingController();
-  TextEditingController contentController = TextEditingController();
+  TextEditingController? titleController;
+  TextEditingController? contentController;
 
   @override
   void initState() {
-    titleController.text = widget.note.title;
-    contentController.text = widget.note.content;
+    titleController = TextEditingController();
+    contentController = TextEditingController();
+    titleController!.text = widget.note.title;
+    contentController!.text = widget.note.content;
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    titleController!.dispose();
+    contentController!.dispose();
   }
 
   @override
@@ -38,12 +47,12 @@ class _EditFormPageState extends State<EditFormPage> {
           IconButton(
               onPressed: () {
                 Note note = widget.note.copyWith(
-                  title: titleController.text,
-                  content: contentController.text,
+                  title: titleController!.text,
+                  content: contentController!.text,
                 );
                 NoteLocalDB().updateNote(note);
-                titleController.clear();
-                contentController.clear();
+                titleController!.clear();
+                contentController!.clear();
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
                   return const HomePage();
                 }));
